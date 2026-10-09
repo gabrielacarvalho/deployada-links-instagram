@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#c9b8f5">
 <title>Deployada Links</title>
 <meta name="description" content="Podcast, livros e links da Deployada — podcast de tecnologia feito por uma mulher dev.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -153,6 +159,8 @@ footer .heart{color:var(--pink)}
 @media (max-width:380px){ .sticky.gp{display:none} }
 @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
+</head>
+<body>
 
 <main class="wrap">
   <header class="head">
@@ -259,7 +267,7 @@ const AUDIO_SRC = "";
 
   const audio=new Audio(); audio.preload='metadata';
   let failed=!AUDIO_SRC||AUDIO_SRC.startsWith('__');
-  if(!failed) audio.src=AUDIO_SRC; else note.hidden=false;
+  if(!failed) audio.src=AUDIO_SRC; else {note.textContent='Ouça o episódio completo na sua plataforma favorita:';note.hidden=false;}
   audio.addEventListener('loadedmetadata',()=>{dur.textContent=fmt(audio.duration)});
   audio.addEventListener('timeupdate',()=>{cur.textContent=fmt(audio.currentTime);if(audio.duration)paint(audio.currentTime/audio.duration)});
   audio.addEventListener('ended',()=>{player.classList.remove('playing');btn.setAttribute('aria-label','Tocar trecho')});
@@ -276,3 +284,6 @@ const AUDIO_SRC = "";
     if(e.key==='ArrowRight'){seek(Math.min(1,p+step));e.preventDefault()} if(e.key==='ArrowLeft'){seek(Math.max(0,p-step));e.preventDefault()}});
 })();
 </script>
+
+</body>
+</html>
