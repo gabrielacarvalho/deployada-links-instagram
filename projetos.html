@@ -70,6 +70,9 @@ body{margin:0;font-family:var(--f-body);font-size:16px;line-height:1.5;color:var
 .thumb.t-pink{background:linear-gradient(135deg,var(--pink),#ff9ccb)}
 .thumb.t-lilac{background:linear-gradient(135deg,var(--lilac-deep),var(--lilac))}
 .thumb.t-ink{background:linear-gradient(135deg,var(--term),#4b3a70)}
+.thumb .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;transition:opacity .4s}
+.thumb .shot.ready{opacity:1}
+.thumb .url,.thumb .badge{z-index:2}
 .badge{position:absolute;right:10px;bottom:10px;font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   background:var(--ink);color:var(--paper);padding:3px 8px;border-radius:999px}
 .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
@@ -125,8 +128,34 @@ footer .h{color:var(--pink)}
   Copie um bloco e preencha. tipo: "site" ou "app".
   Para app, preencha "lojas" com os links da Play Store / App Store (deixe vazio o que não tiver).
   cor: "pink", "lilac" ou "ink".
+  imagem (opcional): caminho de um print seu, ex. "img/pomodora.png".
+  Sem imagem, a página gera a prévia do site sozinha a partir do link.
 */
 const PROJETOS = [
+  {
+    tipo: "site",
+    nome: "Help My English",
+    descricao: "Alunos registram dúvidas de inglês (palavras, frases, músicas, séries, links) em grupos para tirar com o professor na aula.",
+    tags: ["inglês", "educação", "web app"],
+    link: "https://help-my-english.deployada.com.br/",
+    cor: "lilac", sigla: "HE"
+  },
+  {
+    tipo: "site",
+    nome: "Pomodora",
+    descricao: "Timer pomodoro que monta os ciclos de foco e pausa de acordo com a sua energia, sono, humor e tempo disponível.",
+    tags: ["produtividade", "estudos", "pomodoro"],
+    link: "https://pomodora.deployada.com.br/",
+    cor: "pink", sigla: "PO"
+  },
+  {
+    tipo: "site",
+    nome: "Divas Literárias",
+    descricao: "Clube do livro com leituras e encontros, relatos, fórum e uma biblioteca de clássicos para baixar.",
+    tags: ["clube do livro", "comunidade", "fórum"],
+    link: "https://divas-literarias.deployada.com.br/",
+    cor: "ink", sigla: "DL"
+  },
   {
     tipo: "site",
     nome: "Podcast Deployada",
@@ -172,6 +201,8 @@ const PROJETOS = [
     android:'<svg viewBox="0 0 24 24"><path d="M4 9h2v7H4zm14 0h2v7h-2zM7 9h10v9a1 1 0 01-1 1h-1v3h-2v-3h-2v3H9v-3H8a1 1 0 01-1-1zm.4-1a4.7 4.7 0 019.2 0zM8.6 3.2l1.2 1.7.8-.5-1.2-1.7zm6.8 0l-.8-.5-1.2 1.7.8.5z"/></svg>',
     ios:'<svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5a4.4 4.4 0 00-3.4-1.9c-1.5-.1-2.8.9-3.5.9s-1.8-.8-3-.8a4.5 4.5 0 00-3.8 2.3c-1.6 2.8-.4 7 1.2 9.2.8 1.1 1.7 2.3 2.9 2.3 1.1-.1 1.6-.8 3-.8s1.8.8 3 .7c1.3 0 2-1.1 2.8-2.2a9.4 9.4 0 001.2-2.6 4 4 0 01-2.4-3.6zM14.1 5.8A4 4 0 0015 2.9a4.1 4.1 0 00-2.7 1.4 3.9 3.9 0 00-1 2.8 3.4 3.4 0 002.8-1.3z"/></svg>'
   };
+  const SHOT=u=>'https://s0.wp.com/mshots/v1/'+encodeURIComponent(u)+'?w=1000&h=562';
+  const prev=p=>p.imagem||(p.link?SHOT(p.link):'');
   function card(p){
     const isApp=p.tipo==='app', l=p.lojas||{};
     let acts='';
@@ -185,6 +216,7 @@ const PROJETOS = [
       <div class="thumb t-${esc(p.cor||'pink')}">
         ${p.link?`<span class="url">${esc(host(p.link))}</span>`:''}
         <span class="mono" aria-hidden="true">${esc(p.sigla||p.nome.slice(0,2))}</span>
+        ${prev(p)?`<img class="shot" src="${esc(prev(p))}" alt="Prévia do ${esc(p.nome)}" loading="lazy" data-tries="0">`:''}
         <span class="badge">${isApp?'app':'site'}</span>
       </div>
       <div class="body">
@@ -201,6 +233,19 @@ const PROJETOS = [
     if(f!=='site' && !PROJETOS.some(p=>p.tipo==='app')) html+=soon;
     grid.innerHTML=html;
     tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.f===f)));
+    grid.querySelectorAll('img.shot').forEach(img=>{
+      const ok=()=>{
+        // o serviço de prévia devolve uma imagem provisória (400x300) enquanto gera o print
+        if(img.naturalWidth===400&&img.naturalHeight===300&&+img.dataset.tries<4){
+          img.dataset.tries=+img.dataset.tries+1;
+          setTimeout(()=>{img.src=img.src.replace(/&r=\d+$/,'')+'&r='+img.dataset.tries},3000);
+          return;
+        }
+        if(img.naturalWidth>0&&!(img.naturalWidth===400&&img.naturalHeight===300)) img.classList.add('ready');
+      };
+      img.addEventListener('load',ok); img.addEventListener('error',()=>img.remove());
+      if(img.complete&&img.naturalWidth) ok();
+    });
   }
   document.querySelectorAll('[data-count]').forEach(el=>{const k=el.dataset.count;el.textContent=k==='todos'?PROJETOS.length:PROJETOS.filter(p=>p.tipo===k).length});
   tabs.forEach(t=>t.addEventListener('click',()=>{render(t.dataset.f);try{localStorage.setItem('filtro',t.dataset.f)}catch(e){}}));
