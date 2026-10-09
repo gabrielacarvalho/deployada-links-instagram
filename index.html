@@ -251,32 +251,41 @@ Enumerating objects... <span class="ok">done</span>
 </main>
 
 <script>
-/* Coloque aqui o link do trecho em .mp3 (ou deixe o arquivo embutido) */
-const AUDIO_SRC = "";
+/* Trecho do podcast, em ordem de preferência:
+   1) trecho.mp3 na mesma pasta do index.html (o seu recorte)
+   2) prévia oficial de 30s do Spotify */
+const AUDIO_SOURCES = ["trecho.mp3", "https://p.scdn.co/mp3-preview/c0c3f12198cad4bba4728e2007fca2b5f589b08b.mp3"];
 
 (function(){
   const player=document.getElementById('player'), btn=document.getElementById('play'),
         wave=document.getElementById('wave'), cur=document.getElementById('cur'),
         dur=document.getElementById('dur'), note=document.getElementById('note');
   const N=window.innerWidth<420?34:44, bars=[];
-  // forma de onda fixa (pseudo-aleatória, sempre igual)
   let s=7; const rnd=()=>{s=(s*9301+49297)%233280;return s/233280};
   for(let i=0;i<N;i++){const b=document.createElement('b');const h=22+Math.round(rnd()*70*(0.6+0.4*Math.sin(i/3)));b.style.height=Math.max(14,Math.min(100,h))+'%';wave.appendChild(b);bars.push(b)}
   const fmt=t=>{t=Math.max(0,Math.floor(t||0));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
   const paint=p=>{const k=Math.round(p*N);bars.forEach((b,i)=>b.classList.toggle('on',i<k));wave.setAttribute('aria-valuenow',Math.round(p*100))};
+  const showNote=()=>{note.textContent='Ouça o episódio completo na sua plataforma favorita:';note.hidden=false};
 
   const audio=new Audio(); audio.preload='metadata';
-  let failed=!AUDIO_SRC||AUDIO_SRC.startsWith('__');
-  if(!failed) audio.src=AUDIO_SRC; else {note.textContent='Ouça o episódio completo na sua plataforma favorita:';note.hidden=false;}
+  let idx=0, failed=!AUDIO_SOURCES.length, wantPlay=false;
+  const tryNext=()=>{
+    if(idx>=AUDIO_SOURCES.length){failed=true;showNote();player.classList.remove('playing');return}
+    audio.src=AUDIO_SOURCES[idx++]; audio.load();
+    if(wantPlay) audio.play().catch(()=>{});
+  };
+  if(failed) showNote(); else tryNext();
+  audio.addEventListener('playing',()=>{player.classList.add('playing');btn.setAttribute('aria-label','Pausar trecho')});
+  audio.addEventListener('pause',()=>{player.classList.remove('playing');btn.setAttribute('aria-label','Tocar trecho')});
   audio.addEventListener('loadedmetadata',()=>{dur.textContent=fmt(audio.duration)});
   audio.addEventListener('timeupdate',()=>{cur.textContent=fmt(audio.currentTime);if(audio.duration)paint(audio.currentTime/audio.duration)});
-  audio.addEventListener('ended',()=>{player.classList.remove('playing');btn.setAttribute('aria-label','Tocar trecho')});
-  audio.addEventListener('error',()=>{failed=true;note.hidden=false;player.classList.remove('playing')});
+  audio.addEventListener('ended',()=>{paint(1)});
+  audio.addEventListener('error',tryNext);
 
   btn.addEventListener('click',()=>{
-    if(failed){note.hidden=false;return}
-    if(audio.paused){audio.play().then(()=>{player.classList.add('playing');btn.setAttribute('aria-label','Pausar trecho')}).catch(()=>{note.hidden=false})}
-    else{audio.pause();player.classList.remove('playing');btn.setAttribute('aria-label','Tocar trecho')}
+    if(failed){showNote();return}
+    if(audio.paused){wantPlay=true;audio.play().catch(()=>{})}
+    else{wantPlay=false;audio.pause()}
   });
   const seek=p=>{if(audio.duration){audio.currentTime=p*audio.duration;paint(p)}};
   wave.addEventListener('click',e=>{const r=wave.getBoundingClientRect();seek((e.clientX-r.left)/r.width)});
