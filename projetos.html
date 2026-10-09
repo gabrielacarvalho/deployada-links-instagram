@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Projetos Deployada</title>
+<meta name="description" content="Sites e apps criados por Gabriela Carvalho, da Deployada.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bowlby+One&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@400;600;700&family=Figtree:wght@400;500;600;700&family=Special+Elite&display=swap">
+<style>
+/* Layout: mesmo zine da página de links — filtros como abas de terminal, projetos como recortes colados em grade */
+:root{
+  --lilac:#c9b8f5; --lilac-deep:#7b5cd6; --pink:#ff5fa8; --pink-soft:#ffc6e0;
+  --paper:#fffafd; --ink:#24133f; --ink-soft:#5a4a78; --term:#1d1430; --term-fg:#f3e9ff;
+  --grid:rgba(255,255,255,.38);
+  --f-display:"Bowlby One","Arial Black",Impact,sans-serif;
+  --f-serif:"Abril Fatface",Georgia,"Times New Roman",serif;
+  --f-type:"Special Elite","Courier New",monospace;
+  --f-hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--lilac)}
+body{margin:0;font-family:var(--f-body);font-size:16px;line-height:1.5;color:var(--ink);
+  background-color:var(--lilac);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    radial-gradient(circle at 85% 6%,rgba(255,95,168,.35),transparent 40%),radial-gradient(circle at 10% 70%,rgba(255,255,255,.5),transparent 45%);
+  background-size:22px 22px,22px 22px,100% 100%,100% 100%;
+  padding-inline:16px;padding-block:calc(24px + env(safe-area-inset-top,0px)) calc(48px + env(safe-area-inset-bottom,0px));overflow-x:hidden}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+
+.back{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:13px;color:var(--ink);
+  text-decoration:none;background:var(--paper);padding:6px 12px;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.back:hover{box-shadow:3px 3px 0 var(--pink)}
+.back:focus-visible{outline:3px solid var(--lilac-deep);outline-offset:3px}
+
+.head{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.ransom{display:flex;flex-wrap:wrap;gap:3px;margin:0;line-height:1}
+.ransom span{display:inline-block;padding:6px 7px 4px;font-size:clamp(28px,7.5vw,48px);box-shadow:2px 3px 0 rgba(36,19,63,.85)}
+.ransom span:nth-child(3n+1){font-family:var(--f-serif);background:var(--paper)}
+.ransom span:nth-child(3n+2){font-family:var(--f-display);background:var(--pink);color:var(--paper)}
+.ransom span:nth-child(3n){font-family:var(--f-type);background:var(--ink);color:var(--paper);font-weight:700}
+.ransom span:nth-child(4){background:var(--lilac-deep);font-family:var(--f-display)}
+.ransom span:nth-child(odd){transform:rotate(-3deg)} .ransom span:nth-child(even){transform:rotate(3deg)}
+.lead{margin:0;max-width:52ch;font-size:16px;text-wrap:pretty}
+.lead .hand{font-family:var(--f-hand);font-size:22px;color:var(--lilac-deep);font-weight:700}
+
+/* filtros */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;background:var(--term);padding:8px;border-radius:12px;border:2px solid var(--ink);box-shadow:5px 5px 0 var(--ink);align-self:flex-start;max-width:100%}
+.tab{font-family:var(--f-mono);font-size:13.5px;font-weight:600;color:var(--term-fg);background:transparent;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.tab .n{font-variant-numeric:tabular-nums;background:#3a2b5c;border-radius:999px;padding:0 7px;font-size:12px}
+.tab[aria-selected="true"]{background:var(--pink);color:var(--paper)}
+.tab[aria-selected="true"] .n{background:rgba(255,255,255,.25)}
+.tab:hover:not([aria-selected="true"]){background:#2c1f47}
+.tab:focus-visible{outline:3px solid var(--pink-soft);outline-offset:2px}
+
+/* grade */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;margin:0;padding:0;list-style:none}
+.card{background:var(--paper);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);display:flex;flex-direction:column;min-width:0;transition:transform .15s,box-shadow .15s}
+.card:nth-child(3n+1){transform:rotate(-.6deg)} .card:nth-child(3n+2){transform:rotate(.5deg)}
+.card:hover{transform:translate(-2px,-2px) rotate(0);box-shadow:8px 8px 0 var(--pink)}
+.thumb{aspect-ratio:16/9;max-width:100%;border-bottom:2px solid var(--ink);position:relative;overflow:hidden;display:grid;place-items:center}
+.thumb .mono{font-family:var(--f-display);font-size:44px;color:var(--paper);text-shadow:3px 3px 0 var(--ink)}
+.thumb .url{position:absolute;left:10px;right:10px;top:10px;background:rgba(255,250,253,.92);border:1.5px solid var(--ink);border-radius:6px;
+  font-family:var(--f-mono);font-size:11px;padding:3px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb.t-pink{background:linear-gradient(135deg,var(--pink),#ff9ccb)}
+.thumb.t-lilac{background:linear-gradient(135deg,var(--lilac-deep),var(--lilac))}
+.thumb.t-ink{background:linear-gradient(135deg,var(--term),#4b3a70)}
+.badge{position:absolute;right:10px;bottom:10px;font-family:var(--f-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--ink);color:var(--paper);padding:3px 8px;border-radius:999px}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h2{margin:0;font-size:19px;line-height:1.2;font-weight:700}
+.card p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.tags li{font-family:var(--f-mono);font-size:11.5px;background:var(--pink-soft);border:1.5px solid var(--ink);padding:1px 8px;border-radius:999px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;text-decoration:none;padding:8px 12px;border:2px solid var(--ink);color:var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--ink)}
+.btn.main{background:var(--pink);color:var(--paper)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--lilac-deep)}
+.btn:focus-visible{outline:3px solid var(--lilac-deep);outline-offset:2px}
+.btn svg{width:16px;height:16px;fill:currentColor}
+
+.soon{grid-column:1/-1;background:var(--term);color:var(--term-fg);border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);border-radius:12px;padding:20px;
+  font-family:var(--f-mono);font-size:14px;line-height:1.7}
+.soon .p{color:var(--pink)} .soon .ok{color:#9ff0c1}
+.soon .hand{display:block;margin-top:8px;font-family:var(--f-hand);font-size:24px;color:var(--pink-soft)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--pink);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+@media (max-width:560px){.thumb{aspect-ratio:21/9}}
+footer{text-align:center;font-family:var(--f-mono);font-size:12px;color:var(--ink-soft)}
+footer .h{color:var(--pink)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="./">← voltar para os links</a>
+
+  <header class="head">
+    <h1 class="ransom" aria-label="Projetos">
+      <span aria-hidden="true">P</span><span aria-hidden="true">R</span><span aria-hidden="true">O</span><span aria-hidden="true">J</span><span aria-hidden="true">E</span><span aria-hidden="true">T</span><span aria-hidden="true">O</span><span aria-hidden="true">S</span>
+    </h1>
+    <p class="lead">Tudo que eu já coloquei em produção: sites, ferramentas e, em breve, apps para baixar. <span class="hand">feito com café e git push ♥</span></p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Filtrar projetos">
+    <button class="tab" role="tab" id="tab-todos" data-f="todos" aria-selected="true">todos <span class="n" data-count="todos">0</span></button>
+    <button class="tab" role="tab" id="tab-site" data-f="site" aria-selected="false">sites <span class="n" data-count="site">0</span></button>
+    <button class="tab" role="tab" id="tab-app" data-f="app" aria-selected="false">apps <span class="n" data-count="app">0</span></button>
+  </div>
+
+  <ul class="grid" id="grid" aria-live="polite"></ul>
+
+  <footer>@deployada <span class="h">♥</span> deployando conteúdo toda semana</footer>
+</main>
+
+<script>
+/*
+  ===== COMO ADICIONAR UM PROJETO =====
+  Copie um bloco e preencha. tipo: "site" ou "app".
+  Para app, preencha "lojas" com os links da Play Store / App Store (deixe vazio o que não tiver).
+  cor: "pink", "lilac" ou "ink".
+*/
+const PROJETOS = [
+  {
+    tipo: "site",
+    nome: "Podcast Deployada",
+    descricao: "O podcast de tecnologia feito por uma mulher dev para mulheres que vivem, ou querem viver, de tech.",
+    tags: ["podcast", "carreira", "backend"],
+    link: "http://podcast.deployada.com.br/",
+    cor: "pink", sigla: "PD"
+  },
+  {
+    tipo: "site",
+    nome: "Livros da Deployada",
+    descricao: "Biblioteca gratuita com guias de tecnologia em português para mulheres. Leia online ou baixe em PDF e EPUB.",
+    tags: ["Java", "Python", "SQL"],
+    link: "https://livros.deployada.com.br/",
+    cor: "lilac", sigla: "LD"
+  },
+  {
+    tipo: "site",
+    nome: "Biblioteca tech",
+    descricao: "Deploy-Book: acervo de materiais de tecnologia mantido pela comunidade.",
+    tags: ["acervo", "comunidade"],
+    link: "https://deploy-book.deployada.com.br/",
+    cor: "ink", sigla: "DB"
+  },
+  /* Exemplo de app (descomente quando lançar):
+  {
+    tipo: "app",
+    nome: "Nome do app",
+    descricao: "O que o app faz em uma frase.",
+    tags: ["Flutter", "Firebase"],
+    lojas: { android: "https://play.google.com/store/apps/details?id=...", ios: "https://apps.apple.com/app/..." },
+    cor: "pink", sigla: "AP"
+  },
+  */
+];
+
+(function(){
+  const grid=document.getElementById('grid'), tabs=[...document.querySelectorAll('.tab')];
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const host=u=>{try{return new URL(u).host}catch(e){return u}};
+  const ico={
+    go:'<svg viewBox="0 0 24 24"><path d="M14 3h7v7h-2V6.4l-8.3 8.3-1.4-1.4L17.6 5H14zM5 5h6v2H5v12h12v-6h2v6a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>',
+    android:'<svg viewBox="0 0 24 24"><path d="M4 9h2v7H4zm14 0h2v7h-2zM7 9h10v9a1 1 0 01-1 1h-1v3h-2v-3h-2v3H9v-3H8a1 1 0 01-1-1zm.4-1a4.7 4.7 0 019.2 0zM8.6 3.2l1.2 1.7.8-.5-1.2-1.7zm6.8 0l-.8-.5-1.2 1.7.8.5z"/></svg>',
+    ios:'<svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5a4.4 4.4 0 00-3.4-1.9c-1.5-.1-2.8.9-3.5.9s-1.8-.8-3-.8a4.5 4.5 0 00-3.8 2.3c-1.6 2.8-.4 7 1.2 9.2.8 1.1 1.7 2.3 2.9 2.3 1.1-.1 1.6-.8 3-.8s1.8.8 3 .7c1.3 0 2-1.1 2.8-2.2a9.4 9.4 0 001.2-2.6 4 4 0 01-2.4-3.6zM14.1 5.8A4 4 0 0015 2.9a4.1 4.1 0 00-2.7 1.4 3.9 3.9 0 00-1 2.8 3.4 3.4 0 002.8-1.3z"/></svg>'
+  };
+  function card(p){
+    const isApp=p.tipo==='app', l=p.lojas||{};
+    let acts='';
+    if(isApp){
+      if(l.android) acts+=`<a class="btn main" href="${esc(l.android)}" target="_blank" rel="noopener">${ico.android}Android</a>`;
+      if(l.ios) acts+=`<a class="btn main" href="${esc(l.ios)}" target="_blank" rel="noopener">${ico.ios}iPhone</a>`;
+      if(p.link) acts+=`<a class="btn" href="${esc(p.link)}" target="_blank" rel="noopener">${ico.go}Site</a>`;
+    } else acts=`<a class="btn main" href="${esc(p.link)}" target="_blank" rel="noopener">${ico.go}Acessar</a>`;
+    if(p.github) acts+=`<a class="btn" href="${esc(p.github)}" target="_blank" rel="noopener">GitHub</a>`;
+    return `<li class="card" data-tipo="${esc(p.tipo)}">
+      <div class="thumb t-${esc(p.cor||'pink')}">
+        ${p.link?`<span class="url">${esc(host(p.link))}</span>`:''}
+        <span class="mono" aria-hidden="true">${esc(p.sigla||p.nome.slice(0,2))}</span>
+        <span class="badge">${isApp?'app':'site'}</span>
+      </div>
+      <div class="body">
+        <h2>${esc(p.nome)}</h2>
+        <p>${esc(p.descricao)}</p>
+        <ul class="tags">${(p.tags||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+        <div class="actions">${acts}</div>
+      </div></li>`;
+  }
+  const soon=`<li class="soon"><span class="p">$</span> ls ./apps<br><span class="ok">0 arquivos</span>, por enquanto<br><span class="p">$</span> git checkout -b apps-pra-baixar <span class="cursor"></span><span class="hand">os apps estão a caminho ✦</span></li>`;
+  function render(f){
+    const list=PROJETOS.filter(p=>f==='todos'||p.tipo===f);
+    let html=list.map(card).join('');
+    if(f!=='site' && !PROJETOS.some(p=>p.tipo==='app')) html+=soon;
+    grid.innerHTML=html;
+    tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.f===f)));
+  }
+  document.querySelectorAll('[data-count]').forEach(el=>{const k=el.dataset.count;el.textContent=k==='todos'?PROJETOS.length:PROJETOS.filter(p=>p.tipo===k).length});
+  tabs.forEach(t=>t.addEventListener('click',()=>{render(t.dataset.f);try{localStorage.setItem('filtro',t.dataset.f)}catch(e){}}));
+  let start='todos'; try{start=localStorage.getItem('filtro')||'todos'}catch(e){}
+  if(location.hash==='#apps')start='app'; if(location.hash==='#sites')start='site';
+  render(start);
+})();
+</script>
+</body>
+</html>
